@@ -1,0 +1,21 @@
+# --- SYSTEM JUNK ---
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+
+# --- PRIVATE ASSETS ---
+# If you have raw recordings or private notes, name the folder 'private' 
+# and this line will keep it off the internet.
+private/
+drafts/
+sessions_raw/
+
+# --- SECURITY ---
+# If you ever use API keys for Chatbase or Stripe, keep them in a .env file.
+.env
+.env.local
+
+# --- REPOSITORY LOGS ---
+*.log
+npm-debug.log*
