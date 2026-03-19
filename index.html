@@ -25,12 +25,13 @@
             filter: brightness(0.85) contrast(1.1); 
         }
 
-        /* THE LIPS - MIRRORED AND TARGETING THE COUNSELOR */
+        /* THE LIPS - Targeting the Counselor on the right */
         #mouth {
             position: absolute;
             top: 45%; 
             left: 72%; 
             width: 55px; 
+            /* scaleX(-1) mirrors your lips to face the Celestial side */
             transform: translateX(-50%) scaleX(-1) scaleY(0.1);
             display: none;
             z-index: 10;
@@ -49,12 +50,14 @@
         }
         .awaken-btn:hover { background: #ffcc00; color: #000; box-shadow: 0 0 30px rgba(255,200,0,0.3); }
 
+        /* FINAL CALIBRATION TOOLS */
         .calibrator { 
             margin-top: 25px; padding: 15px; background: #0a0a0a; 
             border: 1px solid #222; border-radius: 5px; 
-            font-size: 10px; color: #ffcc00;
+            font-size: 10px; color: #ffcc00; letter-spacing: 1px;
         }
-        input[type=range] { width: 250px; accent-color: #ffcc00; }
+        .calibrator label { display: block; margin-top: 10px; opacity: 0.5; }
+        input[type=range] { width: 250px; accent-color: #ffcc00; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -68,9 +71,14 @@
         <button class="awaken-btn" onclick="startShow()">AWAKEN</button>
         
         <div class="calibrator">
-            UP/DOWN: <input type="range" min="5" max="95" value="45" step="0.1" oninput="moveMouth('top', this.value)">
-            LEFT/RIGHT: <input type="range" min="10" max="95" value="72" step="0.1" oninput="moveMouth('left', this.value)">
-            SIZE: <input type="range" min="10" max="200" value="55" step="1" oninput="resizeMouth(this.value)">
+            <label>VERTICAL (UP/DOWN)</label>
+            <input type="range" min="5" max="95" value="45" step="0.1" oninput="moveMouth('top', this.value)">
+            
+            <label>HORIZONTAL (LEFT/RIGHT)</label>
+            <input type="range" min="10" max="95" value="72" step="0.1" oninput="moveMouth('left', this.value)">
+            
+            <label>LIP SCALE</label>
+            <input type="range" min="10" max="200" value="55" step="1" oninput="resizeMouth(this.value)">
         </div>
     </div>
 
