@@ -22,16 +22,15 @@
 
         #director-img { 
             width: 100%; height: 100%; object-fit: contain; 
-            filter: brightness(0.75) contrast(1.1); 
+            filter: brightness(0.85) contrast(1.1); 
         }
 
-        /* THE LIPS - MIRRORED AND FULLY MOBILE */
+        /* THE LIPS - MIRRORED AND TARGETING THE COUNSELOR */
         #mouth {
             position: absolute;
-            top: 40%; /* Unlocked for high placement */
-            left: 75%; /* Unlocked for right-side placement */
-            width: 50px; 
-            /* scaleX(-1) mirrors your lips to face the Celestial side */
+            top: 45%; 
+            left: 72%; 
+            width: 55px; 
             transform: translateX(-50%) scaleX(-1) scaleY(0.1);
             display: none;
             z-index: 10;
@@ -50,20 +49,18 @@
         }
         .awaken-btn:hover { background: #ffcc00; color: #000; box-shadow: 0 0 30px rgba(255,200,0,0.3); }
 
-        /* THE UNLOCKED CALIBRATOR */
         .calibrator { 
             margin-top: 25px; padding: 15px; background: #0a0a0a; 
             border: 1px solid #222; border-radius: 5px; 
-            font-size: 10px; color: #ffcc00; letter-spacing: 1px;
+            font-size: 10px; color: #ffcc00;
         }
-        .calibrator label { display: block; margin-top: 10px; opacity: 0.5; }
-        input[type=range] { width: 250px; accent-color: #ffcc00; cursor: pointer; }
+        input[type=range] { width: 250px; accent-color: #ffcc00; }
     </style>
 </head>
 <body>
 
     <div class="portrait-frame" id="stage">
-        <img src="Gemini_Generated_Image_1dduq31dduq31ddu.jpg" id="director-img">
+        <img src="Gemini_Generated_Image_1dduq31dduq31ddu.png" id="director-img">
         <img src="lips.png" id="mouth">
     </div>
 
@@ -71,14 +68,9 @@
         <button class="awaken-btn" onclick="startShow()">AWAKEN</button>
         
         <div class="calibrator">
-            <label>UP & DOWN (DRIVE TO THE FACE)</label>
-            <input type="range" min="5" max="95" value="40" step="0.1" oninput="moveMouth('top', this.value)">
-            
-            <label>LEFT & RIGHT (DRIVE TO THE COUNSELOR)</label>
-            <input type="range" min="10" max="95" value="75" step="0.1" oninput="moveMouth('left', this.value)">
-            
-            <label>LIP SCALE</label>
-            <input type="range" min="10" max="200" value="50" step="1" oninput="resizeMouth(this.value)">
+            UP/DOWN: <input type="range" min="5" max="95" value="45" step="0.1" oninput="moveMouth('top', this.value)">
+            LEFT/RIGHT: <input type="range" min="10" max="95" value="72" step="0.1" oninput="moveMouth('left', this.value)">
+            SIZE: <input type="range" min="10" max="200" value="55" step="1" oninput="resizeMouth(this.value)">
         </div>
     </div>
 
@@ -124,7 +116,6 @@
             let volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
 
             if (volume > 5) { 
-                // Maintaining the Flip while speaking
                 mouth.style.transform = `translateX(-50%) scaleX(-1) scaleY(${0.3 + (volume / 18)})`;
             } else {
                 mouth.style.transform = `translateX(-50%) scaleX(-1) scaleY(0.1)`;
