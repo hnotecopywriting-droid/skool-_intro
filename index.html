@@ -1,61 +1,80 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SC Ool | The Director</title>
+    <title>The Awakened Ones | SC Ool</title>
     <style>
-        body { margin: 0; background: #000; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: 'Courier New', monospace; overflow: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
+        body { 
+            margin: 0; background: #000; color: #fff; 
+            display: flex; flex-direction: column; align-items: center; 
+            justify-content: center; height: 100vh; 
+            font-family: 'Cinzel', serif; overflow: hidden;
+        }
 
         .portrait-frame {
-            position: relative; width: 320px; height: 400px;
-            border-radius: 15px; overflow: hidden;
-            box-shadow: 0 0 80px rgba(0,0,0,1);
+            position: relative; width: 450px; height: 450px; /* Adjusted for the square masterpiece */
+            border-radius: 8px; overflow: hidden;
+            box-shadow: 0 0 60px rgba(0,0,0,1);
+            transition: box-shadow 0.2s ease-out;
         }
 
         #director-img { 
-            width: 100%; height: 100%; object-fit: cover; 
-            filter: brightness(0.6) contrast(1.2) grayscale(30%); 
+            width: 100%; height: 100%; object-fit: contain; 
+            filter: brightness(0.7) contrast(1.1);
+            transition: filter 0.2s ease-out;
         }
 
-        /* YOUR LIPS - The black background will disappear */
+        /* THE REAL LIPS - Blended with Screen Mode */
         #mouth {
             position: absolute;
-            top: 64%; left: 50%;
-            width: 65px; 
+            top: 45.5%; /* Approximate for the new photo - use sliders to refine */
+            left: 71.5%; /* Positioned over the 'Counselor' face on the right */
+            width: 55px; 
             transform: translateX(-50%) scaleY(0.1);
             display: none;
             z-index: 10;
-            /* MAGIC MODE: Hides Black Background */
             mix-blend-mode: screen; 
-            filter: brightness(1.1) contrast(1.1);
+            filter: brightness(1.1) contrast(1.2) saturate(0.9);
         }
 
         .speaking #mouth { display: block; }
 
-        .controls { margin-top: 40px; text-align: center; }
+        .controls { margin-top: 30px; text-align: center; z-index: 100; }
         .awaken-btn { 
-            background: #ff003c; color: white; border: none; padding: 18px 50px; 
-            cursor: pointer; border-radius: 5px; letter-spacing: 5px; font-weight: bold;
-            box-shadow: 0 0 20px rgba(255, 0, 60, 0.3);
+            background: transparent; color: #ffcc00; border: 1px solid #ffcc00; 
+            padding: 15px 45px; font-size: 1.1rem; font-weight: bold;
+            cursor: pointer; border-radius: 2px; letter-spacing: 5px;
+            text-transform: uppercase; transition: 0.4s;
+            box-shadow: inset 0 0 10px rgba(255, 200, 0, 0.1);
         }
+        .awaken-btn:hover { background: #ffcc00; color: #000; box-shadow: 0 0 40px rgba(255, 200, 0, 0.4); }
 
-        /* Tools to lock in the placement */
-        .calibrator { margin-top: 20px; padding: 10px; background: #111; border-radius: 10px; font-size: 10px; color: #555; border: 1px solid #222; }
-        input[type=range] { width: 120px; accent-color: #ff003c; }
+        /* CALIBRATION TOOLS */
+        .calibrator { margin-top: 20px; padding: 10px; background: rgba(15,15,15,0.9); border-radius: 8px; border: 1px solid #333; font-size: 10px; color: #666; }
+        .calibrator label { display: block; margin-bottom: 5px; color: #ffcc00; letter-spacing: 1px; }
+        input[type=range] { width: 180px; accent-color: #ffcc00; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
     <div class="portrait-frame" id="stage">
-        <img src="Gemini_Generated_Image_ns8mwuns8mwuns8m.jpg" id="director-img">
+        <img src="Gemini_Generated_Image_1dduq31dduq31ddu.jpg" id="director-img">
         <img src="lips.png" id="mouth">
     </div>
 
     <div class="controls">
         <button class="awaken-btn" onclick="startShow()">AWAKEN</button>
+        
         <div class="calibrator">
-            POSITION: <input type="range" min="55" max="75" value="64" step="0.1" oninput="moveMouth('top', this.value)">
-            SIZE: <input type="range" min="40" max="120" value="65" step="1" oninput="resizeMouth(this.value)">
+            <label>VERTICAL POSITION</label>
+            <input type="range" min="30" max="70" value="45.5" step="0.1" oninput="moveMouth('top', this.value)">
+            <label>HORIZONTAL POSITION</label>
+            <input type="range" min="50" max="90" value="71.5" step="0.1" oninput="moveMouth('left', this.value)">
+            <label>LIP SIZE</label>
+            <input type="range" min="30" max="100" value="55" step="1" oninput="resizeMouth(this.value)">
         </div>
     </div>
 
@@ -64,6 +83,7 @@
     <script>
         const audio = document.getElementById('vocal');
         const mouth = document.getElementById('mouth');
+        const face = document.getElementById('director-img');
         const stage = document.getElementById('stage');
 
         let audioCtx, analyser, source, dataArray;
@@ -84,6 +104,7 @@
         function startShow() {
             if (!audioCtx) initAudio();
             if (audioCtx.state === 'suspended') audioCtx.resume();
+            
             if (audio.paused) {
                 audio.play();
                 stage.classList.add('speaking');
@@ -97,15 +118,27 @@
         function sync() {
             if (audio.paused) return;
             requestAnimationFrame(sync);
+            
             analyser.getByteFrequencyData(dataArray);
             let volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
-            if (volume > 10) { 
-                // Using a slightly more aggressive scale to show off your real lips
-                mouth.style.transform = `translateX(-50%) scaleY(${0.3 + (volume / 20)})`;
+
+            if (volume > 8) { 
+                // Lips open vertically
+                let openScale = 0.3 + (volume / 20);
+                mouth.style.transform = `translateX(-50%) scaleY(${openScale})`;
+                
+                // Subtle glow pulses on the frame
+                let aura = volume / 1.5;
+                stage.style.boxShadow = `0 0 ${aura}px rgba(255, 204, 0, 0.3)`;
+                face.style.filter = `brightness(${0.7 + (volume/60)}) contrast(1.1)`;
             } else {
                 mouth.style.transform = `translateX(-50%) scaleY(0.1)`;
+                stage.style.boxShadow = `0 0 20px rgba(0,0,0,1)`;
+                face.style.filter = `brightness(0.7) contrast(1.1)`;
             }
         }
+
+        audio.onended = () => stage.classList.remove('speaking');
     </script>
 </body>
 </html>
